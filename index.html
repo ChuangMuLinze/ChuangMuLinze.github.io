@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ChuangMuLinze — DSH 插件开发</title>
-<meta name="description" content="写 DSH 插件：让模型能自己调工具，而不是给它多一个按钮。">
+<title>ChuangMuLinze</title>
+<meta name="description" content="学生，在手机上写代码。做过的项目都放在这里。">
 <meta property="og:type" content="website">
 <meta property="og:title" content="ChuangMuLinze">
-<meta property="og:description" content="写 DSH 插件：让模型能自己调工具，而不是给它多一个按钮。">
+<meta property="og:description" content="学生，在手机上写代码。做过的项目都放在这里。">
 <meta property="og:image" content="https://chuangmulinze.github.io/assets/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <style>
@@ -22,7 +22,7 @@
   html{-webkit-text-size-adjust:100%}
   body{
     margin:0; background:var(--bg); color:var(--text);
-    font:16px/1.72 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",
+    font:16px/1.75 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",
          "Hiragino Sans GB","Microsoft YaHei",sans-serif;
     -webkit-font-smoothing:antialiased;
   }
@@ -30,24 +30,11 @@
   .rule{height:3px; background:var(--accent); opacity:.85}
 
   header{padding:64px 0 0}
-  .status{
-    display:flex; align-items:center; gap:9px;
-    font:12px/1 var(--mono); letter-spacing:.06em;
-    color:var(--accent); margin-bottom:26px;
-  }
-  .status i{
-    width:6px; height:6px; border-radius:50%; background:var(--accent);
-    display:inline-block; animation:pulse 2.4s ease-in-out infinite;
-  }
-  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
-  @media (prefers-reduced-motion:reduce){.status i{animation:none}}
-
   h1{
-    font-size:40px; line-height:1.1; margin:0 0 18px;
+    font-size:40px; line-height:1.1; margin:0 0 16px;
     letter-spacing:-.025em; font-weight:650;
   }
-  .lede{font-size:17px; color:var(--muted); margin:0 0 6px; max-width:34em}
-  .lede b{color:var(--text); font-weight:600}
+  .lede{font-size:17px; color:var(--muted); margin:0 0 4px; max-width:34em}
 
   section{padding-top:56px}
   h2{
@@ -66,11 +53,9 @@
     transition:border-color .14s ease, background .14s ease;
   }
   a.card:hover{border-color:#2dd4bf44; background:#131c2e}
-  .head{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; margin-bottom:10px}
-  .name{
-    font:600 18px/1.3 var(--mono); letter-spacing:-.01em;
-  }
-  .name .a{color:var(--accent); font-family:inherit; margin-left:2px}
+  .head{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; margin-bottom:12px}
+  .name{font:600 18px/1.3 var(--mono); letter-spacing:-.01em}
+  .name .a{color:var(--accent); margin-left:2px}
   .badge{
     font:11px/1 var(--mono); padding:4px 8px; border-radius:5px;
     border:1px solid var(--line); color:var(--dim); white-space:nowrap;
@@ -78,16 +63,16 @@
   .badge.live{color:var(--accent); border-color:#5eead433}
   .badge.wip{color:var(--link); border-color:#a5b4fc33}
 
-  .card p{margin:0 0 16px; color:#b3bac6; font-size:15px; line-height:1.72}
-  .card p em{font-style:normal; color:var(--text); font-weight:600}
+  .card p{margin:0 0 12px; color:#b7bec9; font-size:15px; line-height:1.78}
+  .card p:last-of-type{margin-bottom:16px}
   code{
     font:13px/1.5 var(--mono); background:#0b111d; color:#93c5fd;
     padding:1.5px 5px; border-radius:4px; border:1px solid #1b2436;
     word-break:break-word;
   }
   .spec{
-    font:12.5px/1.7 var(--mono); color:var(--dim);
-    padding:10px 0 0; border-top:1px dashed #1b2436; margin-bottom:14px;
+    font:12.5px/1.75 var(--mono); color:#7b8494;
+    padding-top:12px; border-top:1px dashed #1b2436; margin-bottom:14px;
     word-break:break-word;
   }
   .tags{display:flex; flex-wrap:wrap; gap:7px}
@@ -96,8 +81,7 @@
     border:1px solid var(--line-soft); border-radius:4px; padding:5px 8px;
   }
 
-  .about p{margin:0 0 16px; color:#b3bac6; font-size:15.5px}
-  .about strong{color:var(--text); font-weight:600}
+  .about p{margin:0 0 14px; color:#b7bec9; font-size:15.5px}
 
   footer{
     margin-top:72px; padding-top:22px; border-top:1px solid var(--line);
@@ -119,30 +103,31 @@
 <div class="wrap">
 
   <header>
-    <div class="status"><i></i>在做：dsh-go 原生插件</div>
     <h1>ChuangMuLinze</h1>
-    <p class="lede">写 <b>DSH 插件</b>——让模型能自己调工具，而不是给它多一个按钮。</p>
     <p class="lede">学生。用 AI 写东西，做完就开源。</p>
+    <p class="lede">现在这里放着做过的几个项目，以后还会往这儿加。</p>
   </header>
 
   <section>
-    <h2>作品</h2>
+    <h2>做过的东西</h2>
 
     <a class="card" href="https://github.com/ChuangMuLinze/dsh-session-export">
       <div class="head">
         <span class="name">dsh-session-export<span class="a">↗</span></span>
         <span class="badge live">v0.2.0</span>
       </div>
-      <p>DSH 的会话日志是一串拼接的 zstd 帧，事件流里混着 <code>user/message</code>、
-         <code>tool/call</code>、<code>tool/result</code> 和自己的元数据。原生只能靠网页上
-         一个「复制为 Markdown」的按钮——<em>那是给手用的，模型够不到</em>。
-         这个插件把整条链路做成工具：解析帧、剥掉宿主注入的 system-reminder 与运行时上下文、
-         输出 Markdown / HTML / JSON；<code>index</code> 模式把所有会话压进一个自包含 HTML，
-         纯前端搜索，断网可用。</p>
-      <div class="spec">Cordis 插件 · 只用 Node 内置模块 · 23 个测试（含真实日志集成） · 宿主的注入噪音按事件类型过滤，不靠正则硬删</div>
+      <p>DSH 把聊天记录存成一串拼接的 zstd 帧，里面混着 <code>tool/call</code>、
+         <code>tool/result</code> 和一堆自己的元数据。网页上有个「复制为 Markdown」
+         的按钮，点一下就能存下来。</p>
+      <p>问题是模型够不到那个按钮。每回想让它翻一下上周的对话，还是得我自己点、
+         自己粘。<code>dsh-session-export</code> 就是把这个按钮变成工具，
+         顺手把宿主插进来的 <code>system-reminder</code> 按事件类型滤掉。
+         另外有个 <code>index</code> 模式，把所有会话塞进一个 HTML，断网也能搜。</p>
+      <div class="spec">Cordis 插件，只用 Node 内置模块。23 个测试，其中一条跑的是真实会话日志。</div>
       <div class="tags">
-        <span class="tag">zero-deps</span><span class="tag">offline</span>
-        <span class="tag">MIT</span><span class="tag">agent-callable</span>
+        <span class="tag">zero-deps</span>
+        <span class="tag">offline</span>
+        <span class="tag">MIT</span>
       </div>
     </a>
 
@@ -151,25 +136,26 @@
         <span class="name">local-draw</span>
         <span class="badge wip">在做</span>
       </div>
-      <p>dsh-go 原生插件：manifest 里声明胶囊和面板，App 只负责渲染我推的视图 JSON，图片字节落在插件自己的
-         <code>assets/</code> 目录，用 <code>asset:</code> 引用。生成不在端上跑——实测这颗芯片出 512px
-         要两分钟、结果还糊，<em>瓶颈是模型不是参数</em>。所以改成多后端自动择优，
-         无密钥时落到免账号的 FLUX 通道。免费额度有个坑：45 秒一张，而且<em>会偷偷缩图</em>——
-         请求 2048×1536，回来的是 886×665，这个数字现在就写在插件的错误提示里。</p>
-      <div class="spec">dsh-go 原生协议 · 视图 JSON · 多后端降级链 · 实测：境外节点 Node 自带 fetch 10s 连接超时打不通，改 node:https 自控超时</div>
+      <p>手机跑图这件事我试过了，不行。这颗芯片出 512 的图要两分钟，出来的东西
+         也没法看。问题不在参数，在模型本身就小。</p>
+      <p>所以改成把活扔给云端。接了魔搭、百炼、硅基流动和智谱，哪个能用用哪个；
+         没密钥的时候落到一个不用注册的 FLUX 通道。免费的有代价：额度 45 秒一张，
+         而且会偷偷缩你的图——我请求 2048×1536，拿回来的是 886×665。
+         这个数现在写在插件的报错里，省得下次再踩。</p>
+      <div class="spec">dsh-go 原生插件。查这个坑的时候还发现，Node 自带的 fetch 连接超时只有 10 秒，跨境节点根本打不通，最后换成 node:https 自己控超时。</div>
       <div class="tags">
-        <span class="tag">FLUX</span><span class="tag">multi-backend</span>
-        <span class="tag">1536px</span><span class="tag">no-account</span>
+        <span class="tag">FLUX</span>
+        <span class="tag">多后端</span>
+        <span class="tag">1536px</span>
       </div>
     </div>
   </section>
 
   <section class="about">
     <h2>关于</h2>
-    <p>在手机上写代码，DSH 既是运行时也是编辑器。做出来的东西有一个共同点：
-       <strong>模型能自己调</strong>。导出只存在于网页按钮里，所以做成工具；手机上画图要先聊三轮，
-       所以做成一个点一下就走的胶囊。</p>
-    <p>还在读书。动手的理由都很具体——自己用着别扭，就去修。</p>
+    <p>我在手机上写代码，DSH 拿来当运行时和编辑器用。做的东西大多从"烦"开始：
+       烦那个按钮点不了，烦画张图要先聊三轮。修完就开源。</p>
+    <p>还在读书。这里是我的项目页，不只放 DSH 相关的，以后做别的也会往这儿加。</p>
   </section>
 
   <footer>
