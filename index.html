@@ -3,131 +3,175 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ChuangMuLinze — 学生，用 AI 写东西</title>
-<meta name="description" content="学生。用 AI 写东西，做完就开源。在做手机端的 AI 工具。">
+<title>ChuangMuLinze — DSH 插件开发</title>
+<meta name="description" content="写 DSH 插件：让模型能自己调工具，而不是给它多一个按钮。">
 <meta property="og:type" content="website">
 <meta property="og:title" content="ChuangMuLinze">
-<meta property="og:description" content="学生。用 AI 写东西，做完就开源。">
+<meta property="og:description" content="写 DSH 插件：让模型能自己调工具，而不是给它多一个按钮。">
 <meta property="og:image" content="https://chuangmulinze.github.io/assets/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <style>
   :root{
-    --bg:#0b1020; --panel:#141b2f; --line:#1e293f;
-    --text:#e6edf3; --muted:#8b949e; --accent:#14b8a6; --accent2:#818cf8;
+    --bg:#0a0e17; --panel:#111827; --line:#1f2937; --line-soft:#172033;
+    --text:#e5e7eb; --muted:#9ca3af; --dim:#6b7280;
+    --accent:#5eead4; --link:#a5b4fc;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,
+           "Liberation Mono",monospace;
   }
   *{box-sizing:border-box}
   html{-webkit-text-size-adjust:100%}
   body{
     margin:0; background:var(--bg); color:var(--text);
-    font:16px/1.75 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",
+    font:16px/1.72 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",
          "Hiragino Sans GB","Microsoft YaHei",sans-serif;
-    background-image:
-      linear-gradient(rgba(20,184,166,.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(20,184,166,.04) 1px, transparent 1px);
-    background-size:60px 60px;
+    -webkit-font-smoothing:antialiased;
   }
-  .wrap{max-width:720px; margin:0 auto; padding:0 22px 96px}
-  .topbar{height:4px; background:linear-gradient(90deg,var(--accent),var(--accent2))}
+  .wrap{max-width:700px; margin:0 auto; padding:0 24px 100px}
+  .rule{height:3px; background:var(--accent); opacity:.85}
 
-  header{padding:56px 0 8px}
-  .eyebrow{
-    display:inline-flex; align-items:center; gap:8px;
-    font-size:13px; color:var(--accent); letter-spacing:.08em;
-    text-transform:uppercase; margin-bottom:18px;
+  header{padding:64px 0 0}
+  .status{
+    display:flex; align-items:center; gap:9px;
+    font:12px/1 var(--mono); letter-spacing:.06em;
+    color:var(--accent); margin-bottom:26px;
   }
-  .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);
-       box-shadow:0 0 0 4px rgba(20,184,166,.15)}
-  h1{font-size:38px; line-height:1.15; margin:0 0 14px; letter-spacing:-.02em}
-  .tagline{font-size:17px; color:var(--muted); margin:0 0 10px}
-  .tagline b{color:var(--text); font-weight:600}
+  .status i{
+    width:6px; height:6px; border-radius:50%; background:var(--accent);
+    display:inline-block; animation:pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+  @media (prefers-reduced-motion:reduce){.status i{animation:none}}
 
-  section{padding-top:52px}
-  h2{font-size:13px; letter-spacing:.14em; text-transform:uppercase;
-     color:var(--muted); font-weight:600; margin:0 0 20px;
-     padding-bottom:10px; border-bottom:1px solid var(--line)}
+  h1{
+    font-size:40px; line-height:1.1; margin:0 0 18px;
+    letter-spacing:-.025em; font-weight:650;
+  }
+  .lede{font-size:17px; color:var(--muted); margin:0 0 6px; max-width:34em}
+  .lede b{color:var(--text); font-weight:600}
+
+  section{padding-top:56px}
+  h2{
+    font:11px/1 var(--mono); letter-spacing:.18em; text-transform:uppercase;
+    color:var(--dim); margin:0 0 22px; padding-bottom:12px;
+    border-bottom:1px solid var(--line);
+  }
 
   .card{
     display:block; text-decoration:none; color:inherit;
-    background:var(--panel); border:1px solid var(--line);
-    border-radius:14px; padding:20px 22px; margin-bottom:14px;
-    transition:border-color .15s ease, transform .15s ease;
+    background:var(--panel); border:1px solid var(--line-soft);
+    border-radius:12px; padding:22px; margin-bottom:16px;
+    transition:border-color .14s ease, background .14s ease;
   }
-  a.card:hover{border-color:var(--accent); transform:translateY(-1px)}
-  .card h3{margin:0 0 8px; font-size:19px; font-weight:600; letter-spacing:-.01em}
-  .card h3 .arrow{color:var(--accent); font-size:16px; margin-left:6px}
-  .card p{margin:0 0 14px; color:var(--muted); font-size:15px; line-height:1.65}
-  .meta{display:flex; flex-wrap:wrap; gap:8px}
-  .tag{
-    font-size:12px; color:var(--muted); border:1px solid var(--line);
-    border-radius:999px; padding:3px 10px; line-height:1.6;
+  a.card:hover{border-color:#2dd4bf44; background:#131c2e}
+  .head{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; margin-bottom:10px}
+  .name{
+    font:600 18px/1.3 var(--mono); letter-spacing:-.01em;
   }
-  .tag.now{color:var(--accent); border-color:rgba(20,184,166,.4)}
-  .tag.soon{color:var(--accent2); border-color:rgba(129,140,248,.4)}
+  .name .a{color:var(--accent); font-family:inherit; margin-left:2px}
+  .badge{
+    font:11px/1 var(--mono); padding:4px 8px; border-radius:5px;
+    border:1px solid var(--line); color:var(--dim); white-space:nowrap;
+  }
+  .badge.live{color:var(--accent); border-color:#5eead433}
+  .badge.wip{color:var(--link); border-color:#a5b4fc33}
 
-  .about p{margin:0 0 14px; color:var(--muted); font-size:15.5px}
+  .card p{margin:0 0 16px; color:#b3bac6; font-size:15px; line-height:1.72}
+  .card p em{font-style:normal; color:var(--text); font-weight:600}
+  code{
+    font:13px/1.5 var(--mono); background:#0b111d; color:#93c5fd;
+    padding:1.5px 5px; border-radius:4px; border:1px solid #1b2436;
+    word-break:break-word;
+  }
+  .spec{
+    font:12.5px/1.7 var(--mono); color:var(--dim);
+    padding:10px 0 0; border-top:1px dashed #1b2436; margin-bottom:14px;
+    word-break:break-word;
+  }
+  .tags{display:flex; flex-wrap:wrap; gap:7px}
+  .tag{
+    font:11px/1 var(--mono); color:var(--dim);
+    border:1px solid var(--line-soft); border-radius:4px; padding:5px 8px;
+  }
+
+  .about p{margin:0 0 16px; color:#b3bac6; font-size:15.5px}
   .about strong{color:var(--text); font-weight:600}
 
-  footer{margin-top:64px; padding-top:24px; border-top:1px solid var(--line);
-         color:var(--muted); font-size:14px;
-         display:flex; flex-wrap:wrap; gap:14px; justify-content:space-between}
-  footer a{color:var(--accent2); text-decoration:none}
+  footer{
+    margin-top:72px; padding-top:22px; border-top:1px solid var(--line);
+    display:flex; flex-wrap:wrap; gap:16px; justify-content:space-between;
+    font:12px/1.6 var(--mono); color:var(--dim);
+  }
+  footer a{color:var(--link); text-decoration:none}
   footer a:hover{text-decoration:underline}
 
   @media (max-width:480px){
-    h1{font-size:31px}
-    header{padding-top:40px}
+    h1{font-size:33px}
+    header{padding-top:46px}
     .card{padding:18px}
   }
 </style>
 </head>
 <body>
-<div class="topbar"></div>
+<div class="rule"></div>
 <div class="wrap">
 
   <header>
-    <div class="eyebrow"><span class="dot"></span>在做：手机端的 AI 工具</div>
+    <div class="status"><i></i>在做：dsh-go 原生插件</div>
     <h1>ChuangMuLinze</h1>
-    <p class="tagline">学生。<b>用 AI 写东西，做完就开源。</b></p>
-    <p class="tagline">不打草稿，先跑起来再改。</p>
+    <p class="lede">写 <b>DSH 插件</b>——让模型能自己调工具，而不是给它多一个按钮。</p>
+    <p class="lede">学生。用 AI 写东西，做完就开源。</p>
   </header>
 
   <section>
     <h2>作品</h2>
 
     <a class="card" href="https://github.com/ChuangMuLinze/dsh-session-export">
-      <h3>dsh-session-export <span class="arrow">↗</span></h3>
-      <p>把 AI 对话导出成 Markdown / HTML / JSON，还能把所有会话收进一个能搜索的离线页面。
-         导出是按钮的时候，模型够不到；做成工具，它就能自己去翻。</p>
-      <div class="meta">
-        <span class="tag">Node</span>
-        <span class="tag">零依赖</span>
-        <span class="tag">MIT</span>
-        <span class="tag">23 个测试</span>
+      <div class="head">
+        <span class="name">dsh-session-export<span class="a">↗</span></span>
+        <span class="badge live">v0.2.0</span>
+      </div>
+      <p>DSH 的会话日志是一串拼接的 zstd 帧，事件流里混着 <code>user/message</code>、
+         <code>tool/call</code>、<code>tool/result</code> 和自己的元数据。原生只能靠网页上
+         一个「复制为 Markdown」的按钮——<em>那是给手用的，模型够不到</em>。
+         这个插件把整条链路做成工具：解析帧、剥掉宿主注入的 system-reminder 与运行时上下文、
+         输出 Markdown / HTML / JSON；<code>index</code> 模式把所有会话压进一个自包含 HTML，
+         纯前端搜索，断网可用。</p>
+      <div class="spec">Cordis 插件 · 只用 Node 内置模块 · 23 个测试（含真实日志集成） · 宿主的注入噪音按事件类型过滤，不靠正则硬删</div>
+      <div class="tags">
+        <span class="tag">zero-deps</span><span class="tag">offline</span>
+        <span class="tag">MIT</span><span class="tag">agent-callable</span>
       </div>
     </a>
 
     <div class="card">
-      <h3>local-draw <span class="arrow"></span></h3>
-      <p>手机上的画图插件。不在手机上跑模型——那台手机跑不动，跑出来也糊。
-         改成接云端，免账号就能到 FLUX 的画质，1536 边长，点一下就出。</p>
-      <div class="meta">
-        <span class="tag now">在做</span>
-        <span class="tag">dsh-go 原生</span>
-        <span class="tag">多后端自动择优</span>
+      <div class="head">
+        <span class="name">local-draw</span>
+        <span class="badge wip">在做</span>
+      </div>
+      <p>dsh-go 原生插件：manifest 里声明胶囊和面板，App 只负责渲染我推的视图 JSON，图片字节落在插件自己的
+         <code>assets/</code> 目录，用 <code>asset:</code> 引用。生成不在端上跑——实测这颗芯片出 512px
+         要两分钟、结果还糊，<em>瓶颈是模型不是参数</em>。所以改成多后端自动择优，
+         无密钥时落到免账号的 FLUX 通道。免费额度有个坑：45 秒一张，而且<em>会偷偷缩图</em>——
+         请求 2048×1536，回来的是 886×665，这个数字现在就写在插件的错误提示里。</p>
+      <div class="spec">dsh-go 原生协议 · 视图 JSON · 多后端降级链 · 实测：境外节点 Node 自带 fetch 10s 连接超时打不通，改 node:https 自控超时</div>
+      <div class="tags">
+        <span class="tag">FLUX</span><span class="tag">multi-backend</span>
+        <span class="tag">1536px</span><span class="tag">no-account</span>
       </div>
     </div>
   </section>
 
   <section class="about">
     <h2>关于</h2>
-    <p>我在手机上写代码，用的是 <strong>DSH</strong> —— 一个能自己动手干活的 AI 助手。
-       所以我做的东西都有一个共同点：<strong>让 AI 能真正上手</strong>，而不是多一个要我自己点的按钮。</p>
-    <p>还在读书。项目都是自己用着不舒服，顺手做出来的。</p>
+    <p>在手机上写代码，DSH 既是运行时也是编辑器。做出来的东西有一个共同点：
+       <strong>模型能自己调</strong>。导出只存在于网页按钮里，所以做成工具；手机上画图要先聊三轮，
+       所以做成一个点一下就走的胶囊。</p>
+    <p>还在读书。动手的理由都很具体——自己用着别扭，就去修。</p>
   </section>
 
   <footer>
-    <span>© 2026 ChuangMuLinze</span>
-    <a href="https://github.com/ChuangMuLinze">GitHub</a>
+    <span>2026 · ChuangMuLinze</span>
+    <a href="https://github.com/ChuangMuLinze">github.com/ChuangMuLinze</a>
   </footer>
 
 </div>
